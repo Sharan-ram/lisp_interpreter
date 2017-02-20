@@ -38,9 +38,6 @@ function catogarize(token) {
     return token;
 }
 
-
-
-
 //console.log(parse(`((lambda (x) x) "lisp")`));
 //console.log(parse(`(define a 5)`));
 //console.log(parse(`(+ 2 3)`))
@@ -105,6 +102,9 @@ function special(input) {
     if(!isNaN(num = parseFloat(first))) {
         return num;
     }
+    if(first === "quote") {
+        return input.shift();
+    }
     var argsArr = [];
     var func = library[first];
     var length = input.length;
@@ -119,4 +119,4 @@ function special(input) {
 //
 
 
-console.log(result(`(define a 5)`));
+console.log(result(`(quote "hello")`));
