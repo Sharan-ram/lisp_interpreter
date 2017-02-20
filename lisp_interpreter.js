@@ -1,3 +1,10 @@
+function result(input) {
+    return eval(parse(input));
+}
+
+function parse(input) {
+    return createArr(tokenize(input));
+}
 
 function tokenize(input) {
     return input.replace(/\(/g," ( ").replace(/\)/g," ) ").trim().split(/ +/);
@@ -31,13 +38,12 @@ function catogarize(token) {
     return token;
 }
 
-function parse(input) {
-    return createArr(tokenize(input));
-}
+
 
 
 //console.log(parse(`((lambda (x) x) "lisp")`));
 //console.log(parse(`(define a 5)`));
+//console.log(parse(`(+ 2 3)`))
 
 
 var library = {
@@ -67,7 +73,50 @@ var library = {
 
 
 function eval(input) {
-    return library[input[0]](input[1],input[2]);
+
+    var first = input.shift();
+
+    if(first===undefined) {
+        return undefined;
+    }
+    if(first==='define') {
+        library[input.shift()] = special(input);
+
+    }
+    else if(first==='set!') {
+        library[input.shift()] = special(input);
+    }
+    else {
+        input.unshift(first);
+        //console.log(input);
+        return special(input);
+    }
 }
 
-console.log(eval(parse((`(+ 1 2)`))));
+function special(input) {
+    //console.log(input);
+    var first = input.shift();
+    //console.log(first);
+
+    //console.log(func);
+    if(first===undefined) {
+        return undefined;
+    }
+    if(!isNaN(num = parseFloat(first))) {
+        return num;
+    }
+    var argsArr = [];
+    var func = library[first];
+    var length = input.length;
+    for(var i=0;i<length;i++) {
+        argsArr.push(special(input));
+        //console.log(argsArr);
+    }
+
+    //console.log(argsArr)
+    return argsArr.reduce(func);
+}
+//
+
+
+console.log(result(`(define a 5)`));
