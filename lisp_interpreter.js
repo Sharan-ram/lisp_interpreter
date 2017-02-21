@@ -38,9 +38,9 @@ function catogarize(token) {
     return token;
 }
 
-//console.log(parse(`((lambda (x) x) "lisp")`));
+console.log(parse(`((lambda (x) x) "lisp interpreter")`));
 //console.log(parse(`(define a 5)`));
-//console.log(parse(`(+ 2 3)`))
+//console.log(parse(`(if (> 3 1) (3) (4))`))
 
 
 var library = {
@@ -66,6 +66,7 @@ var library = {
     'not':function(a,b=null) {return !a},
     'number?':function(a) {return !isNaN(a)},
     // 'pi': function() {return Math.PI();}
+
 }
 
 
@@ -83,6 +84,15 @@ function eval(input) {
     else if(first==='set!') {
         library[input.shift()] = special(input);
     }
+    else if(first === 'if') {
+        var res = eval(input.shift());
+        //console.log(res);
+        if(res===true) {
+            return eval(input[0]);
+        }
+        return eval(input[1]);
+    }
+
     else {
         input.unshift(first);
         //console.log(input);
@@ -119,4 +129,4 @@ function special(input) {
 //
 
 
-console.log(result(`(quote "hello")`));
+console.log(result(`(if (>= 5 4) (quote "5 is greater") (* 1 4))`));
