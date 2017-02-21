@@ -38,7 +38,7 @@ function catogarize(token) {
     return token;
 }
 
-console.log(parse(`((lambda (x) x) "lisp interpreter")`));
+console.log(parse(`((lambda (x) x) "lisp")`));
 //console.log(parse(`(define a 5)`));
 //console.log(parse(`(if (> 3 1) (3) (4))`))
 
@@ -115,6 +115,15 @@ function special(input) {
     if(first === "quote") {
         return input.shift();
     }
+     if (first === 'begin') {
+      var len = input.length;
+      for (var j = 0; j < len; j++) {
+        if (j === len - 1) {
+          return eval(input.shift())
+        }
+        eval(input.shift())
+      }
+    }
     var argsArr = [];
     var func = library[first];
     var length = input.length;
@@ -129,4 +138,5 @@ function special(input) {
 //
 
 
-console.log(result(`(if (>= 5 4) (quote "5 is greater") (* 1 4))`));
+//console.log(result(`(if (>= 5 4) (quote 5) (* 1 4))`));
+//console.log(result(`(+ 1 (* 2 1))`))
