@@ -150,14 +150,7 @@ function special(input) {
 
         if(typeof first[2] === 'object') {
             re = replace(first[2]);
-            //console.log(re);
-            //console.log(first[2]);
-            /*var arr1=[];
-            arr1.push(first[2][0]);
-            for(var a=1;a<first[2].length;a++) {
-                arr1.push(library[first[2][a]]);
-            }
-            return eval(arr1);*/
+
             return eval(re);
         }
 
@@ -209,7 +202,7 @@ function special(input) {
 
 //console.log(result(`(if (< 5 4) (5) (* 1 4))`));
 //console.log(result(`(quote "sharan")`));
-console.log(result(`(+ 5 (* 3 4 5))`));
+//console.log(result(`(+ 5 (* 3 4 5))`));
 //console.log(result(`((lambda (x y) (+ x (* x y))) 2 3)`));
 //console.log(result(`(+ 2 (+ 1 (* 3 2)))`));
 //console.log(result(`((lambda (x y) (* x (+ x y))) 3 10)`));
