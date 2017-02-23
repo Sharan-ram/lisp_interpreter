@@ -37,12 +37,13 @@ function catogarize(token) {
     }
     return token;
 }
-
+var store = {};
 //console.log(parse(`((lambda (x) x) "lisp")`));
 //console.log(parse(`(define a 5)`));
 //console.log(parse(`(if (> 3 1) (3) (4))`))
 //console.log(parse(`((lambda (x y) (+ x y)) 2 1)`))
 //console.log(parse(`(+ 1 (* 3 2))`))
+//console.log(parse(`((lambda (x y) (* x (+ x y))) 3 10)`));
 
 
 var library = {
@@ -102,12 +103,21 @@ function eval(input) {
         return special(input);
     }
 }
-/*function atom(input) {
-    if(typeof input==='number'|| typeof input==='string') {
-        return input;
+function replace(input) {
+    for(var n=0;n<input.length;n++) {
+        if(typeof input[n]!=='object') {
+            if(library[input[n]]===undefined) {
+                var a=input[n];
+                input.splice(n,1,store[a]);
+            }
+
+        }
+        else {
+            replace(input[n]);
+        }
     }
-    return special(input);
-}*/
+    return input;
+}
 
 function special(input) {
     //console.log(input);
@@ -133,19 +143,22 @@ function special(input) {
 
         var lamdaArgLen = first[1].length;
         for(var k=0;k<lamdaArgLen;k++) {
-            library[first[1][k]]=input[k];
+            store[first[1][k]]=input[k];
             //console.log(library[first[1][k]])
 
         }
 
         if(typeof first[2] === 'object') {
+            re = replace(first[2]);
+            //console.log(re);
             //console.log(first[2]);
-            var arr1=[];
+            /*var arr1=[];
             arr1.push(first[2][0]);
             for(var a=1;a<first[2].length;a++) {
                 arr1.push(library[first[2][a]]);
             }
-            return eval(arr1);
+            return eval(arr1);*/
+            return eval(re);
         }
 
         var arr = [];
@@ -196,8 +209,7 @@ function special(input) {
 
 //console.log(result(`(if (< 5 4) (5) (* 1 4))`));
 //console.log(result(`(quote "sharan")`));
-//console.log(result(`(+ 5 3 4 5)`));
-//console.log(library['a']);
+console.log(result(`(+ 5 (* 3 4 5))`));
 //console.log(result(`((lambda (x y) (+ x (* x y))) 2 3)`));
-//console.log(result(`(+ 2(+ 1 (* 3 2)))`))
-console.log(result(`((lambda (x y) (+ x y)) 2 3)`))
+//console.log(result(`(+ 2 (+ 1 (* 3 2)))`));
+//console.log(result(`((lambda (x y) (* x (+ x y))) 3 10)`));
