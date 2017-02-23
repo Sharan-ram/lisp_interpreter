@@ -173,9 +173,17 @@ function special(input) {
     }
     var argsArr = [];
     var func = library[first];
+    //console.log(func);
     var length = input.length;
     for(var i=0;i<length;i++) {
-        argsArr.push(special(input));
+        if(typeof input[i]!=='object') {
+            argsArr.push(input[i]);
+
+        }
+        else {
+        result = eval(input[i]);
+        argsArr.push(result);
+    }
         //console.log(argsArr)
 
         //console.log(argsArr);
@@ -191,6 +199,5 @@ function special(input) {
 //console.log(result(`(+ 5 3 4 5)`));
 //console.log(library['a']);
 //console.log(result(`((lambda (x y) (+ x (* x y))) 2 3)`));
-//console.log(result(`(+ 2 (* 3 2))`))
-//console.log(special(['*',2,3]))
+//console.log(result(`(+ 2(+ 1 (* 3 2)))`))
 console.log(result(`((lambda (x y) (+ x y)) 2 3)`))
