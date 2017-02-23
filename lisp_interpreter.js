@@ -38,9 +38,11 @@ function catogarize(token) {
     return token;
 }
 
-console.log(parse(`((lambda (x) x) "lisp")`));
+//console.log(parse(`((lambda (x) x) "lisp")`));
 //console.log(parse(`(define a 5)`));
 //console.log(parse(`(if (> 3 1) (3) (4))`))
+//console.log(parse(`((lambda (x y) (+ x y)) 2 1)`))
+//console.log(parse(`(+ 1 (* 3 2))`))
 
 
 var library = {
@@ -77,6 +79,7 @@ function eval(input) {
     if(first===undefined) {
         return undefined;
     }
+
     if(first==='define') {
         library[input.shift()] = special(input);
 
@@ -99,9 +102,16 @@ function eval(input) {
         return special(input);
     }
 }
+/*function atom(input) {
+    if(typeof input==='number'|| typeof input==='string') {
+        return input;
+    }
+    return special(input);
+}*/
 
 function special(input) {
     //console.log(input);
+
     var first = input.shift();
     //console.log(first);
 
@@ -109,8 +119,42 @@ function special(input) {
     if(first===undefined) {
         return undefined;
     }
+
     if(!isNaN(num = parseFloat(first))) {
         return num;
+    }
+    if(first[0] === "lambda") {
+        if(input.length===0) {
+            return first;
+        }
+
+        //console.log(input)
+        //console.log(first[1]);
+
+        var lamdaArgLen = first[1].length;
+        for(var k=0;k<lamdaArgLen;k++) {
+            library[first[1][k]]=input[k];
+            //console.log(library[first[1][k]])
+
+        }
+
+        if(typeof first[2] === 'object') {
+            //console.log(first[2]);
+            var arr1=[];
+            arr1.push(first[2][0]);
+            for(var a=1;a<first[2].length;a++) {
+                arr1.push(library[first[2][a]]);
+            }
+            return eval(arr1);
+        }
+
+        var arr = [];
+        arr.push(library[first[2]]);
+
+        //console.log(arr);
+        return eval(arr);
+
+
     }
     if(first === "quote") {
         return input.shift();
@@ -124,19 +168,29 @@ function special(input) {
         eval(input.shift())
       }
     }
+    if(library[first]===undefined) {
+        return first;
+    }
     var argsArr = [];
     var func = library[first];
     var length = input.length;
     for(var i=0;i<length;i++) {
         argsArr.push(special(input));
+        //console.log(argsArr)
+
         //console.log(argsArr);
     }
 
     //console.log(argsArr)
     return argsArr.reduce(func);
+
 }
-//
 
-
-//console.log(result(`(if (>= 5 4) (quote 5) (* 1 4))`));
-//console.log(result(`(+ 1 (* 2 1))`))
+//console.log(result(`(if (< 5 4) (5) (* 1 4))`));
+//console.log(result(`(quote "sharan")`));
+//console.log(result(`(+ 5 3 4 5)`));
+//console.log(library['a']);
+//console.log(result(`((lambda (x y) (+ x (* x y))) 2 3)`));
+//console.log(result(`(+ 2 (* 3 2))`))
+//console.log(special(['*',2,3]))
+console.log(result(`((lambda (x y) (+ x y)) 2 3)`))
